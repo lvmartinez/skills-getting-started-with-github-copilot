@@ -44,7 +44,8 @@ def test_signup_rejects_duplicate_participant(client):
     assert email in app_module.activities[activity_name]['participants']
 
     # Act
-    response = client.post(f'/activities/{activity_name}/signup', params={'email': email})
+    activity_path = quote(activity_name, safe="")
+    response = client.post(f'/activities/{activity_path}/signup', params={'email': email})
     payload = response.json()
 
     # Assert
