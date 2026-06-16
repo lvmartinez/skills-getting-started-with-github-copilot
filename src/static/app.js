@@ -21,24 +21,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const participants = Array.isArray(details.participants) ? details.participants : [];
         const spotsLeft = details.max_participants - participants.length;
+
+        const escapeHtml = (value) =>
+          String(value).replace(/[&<>"']/g, (ch) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[ch]);
+
+        const safeActivityName = escapeHtml(name);
         const participantsHtml = participants.length
           ? participants
-              .map((participant) => `
+              .map((participant) => {
+                const safeParticipant = escapeHtml(participant);
+                return `
                 <li class="participant-item">
-                  <span class="participant-email">${participant}</span>
+                  <span class="participant-email">${safeParticipant}</span>
                   <button
                     type="button"
                     class="participant-delete-btn"
-                    data-activity="${name}"
-                    data-email="${participant}"
-                    aria-label="Remove ${participant} from ${name}"
+                    data-activity="${safeActivityName}"
+                    data-email="${safeParticipant}"
+                    aria-label="Remove ${safeParticipant} from ${safeActivityName}"
                     title="Remove participant"
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v8h-2V9zm4 0h2v8h-2V9zM7 9h2v8H7V9z"/>
                     </svg>
                   </button>
-                </li>`)
+                </li>`;
+              })
               .join("")
           : '<li class="participant-empty">No one has signed up yet</li>';
 
