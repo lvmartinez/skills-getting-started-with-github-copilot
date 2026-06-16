@@ -27,7 +27,8 @@ def test_unregister_returns_404_for_unknown_activity(client):
     email = 'student@mergington.edu'
 
     # Act
-    response = client.delete(f'/activities/{activity_name}/participants', params={'email': email})
+    activity_path = quote(activity_name, safe="")
+    response = client.delete(f'/activities/{activity_path}/participants', params={'email': email})
     payload = response.json()
 
     # Assert
