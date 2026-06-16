@@ -1,5 +1,6 @@
-import src.app as app_module
+from urllib.parse import quote
 
+import src.app as app_module
 
 
 def test_unregister_removes_existing_participant(client):
@@ -9,7 +10,8 @@ def test_unregister_removes_existing_participant(client):
     assert email in app_module.activities[activity_name]['participants']
 
     # Act
-    response = client.delete(f'/activities/{activity_name}/participants', params={'email': email})
+    activity_path = quote(activity_name, safe="")
+    response = client.delete(f'/activities/{activity_path}/participants', params={'email': email})
     payload = response.json()
 
     # Assert
