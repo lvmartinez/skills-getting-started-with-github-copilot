@@ -27,7 +27,8 @@ def test_signup_returns_404_for_unknown_activity(client):
     email = 'student@mergington.edu'
 
     # Act
-    response = client.post(f'/activities/{activity_name}/signup', params={'email': email})
+    activity_path = quote(activity_name, safe="")
+    response = client.post(f'/activities/{activity_path}/signup', params={'email': email})
     payload = response.json()
 
     # Assert
